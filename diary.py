@@ -35,7 +35,7 @@ class Notebook(object):
 
 class Diary(object):
 
-    self.__DESCR_FILENAME='description.txt'
+    __DESCR_FILENAME='description.txt'
 
     def __init__(self, name, path='diary', overwrite=False, image_format='png'):
         self.creation_date = datetime.datetime.now()
@@ -92,11 +92,14 @@ class Diary(object):
 
 if __name__ == "__main__":
     diary = Diary(name='world', path='hello', overwrite=False)
+
     diary.add_notebook('validation')
     diary.add_notebook('test')
-    diary.add_entry('validation', ['hi!', 0.3, 25, 'First entry', 0, 'yes'])
+
+    diary.add_entry('validation', ['accuracy', 0.3])
+    diary.add_entry('validation', ['accuracy', 0.5])
+    diary.add_entry('validation', ['accuracy', 0.9])
+    diary.add_entry('test', ['First test went wrong', 0.345, 'label_1'])
+
     image = Image.new(mode="1", size=(16,16), color=0)
-    diary.save_image(image, filename='test')
-    diary.add_entry('test', ['bye', 0.5, 32, 'Second entry', 0, 'yes'])
-    image = Image.new(mode="1", size=(16,16), color=1)
-    diary.save_image(image, filename='test')
+    diary.save_image(image, filename='test_results')
