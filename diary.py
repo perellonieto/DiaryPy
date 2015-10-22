@@ -16,8 +16,6 @@ try:
 except ImportError:
     import Image
 
-RESULTS_FILENAME='results.csv'
-DESCRIPTION_FILENAME='description.txt'
 
 class Notebook(object):
     def __init__(self, name, path):
@@ -36,6 +34,9 @@ class Notebook(object):
                              now.date(), now.time()] + row)
 
 class Diary(object):
+
+    self.__DESCR_FILENAME='description.txt'
+
     def __init__(self, name, path='diary', overwrite=False, image_format='png'):
         self.creation_date = datetime.datetime.now()
         self.name = name
@@ -68,7 +69,7 @@ class Diary(object):
         return all_paths
 
     def _save_description(self):
-        with open(os.path.join(self.path, DESCRIPTION_FILENAME), 'w') as f:
+        with open(os.path.join(self.path, self.__DESCR_FILENAME), 'w') as f:
             print("Writting :\n{}".format(self))
             f.write(self.__str__())
 
