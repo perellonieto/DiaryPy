@@ -19,6 +19,22 @@ except ImportError:
 RESULTS_FILENAME='results.csv'
 DESCRIPTION_FILENAME='description.txt'
 
+class Notebook(object):
+    def __init__(self, name, path):
+        self.name = name
+        self.filename = "{}.csv".format(name)
+        self.path = path
+        self.entry_number = 0
+
+    def add_entry(self, row, general_entry_number=0):
+        self.entry_number += 1
+        with open(os.path.join(self.path, self.filename), 'a') as csvfile:
+            writer = csv.writer(csvfile, delimiter=',', quotechar='|',
+                    quoting=csv.QUOTE_NONNUMERIC)
+            now = datetime.datetime.now()
+            writer.writerow([general_entry_number, self.entry_number,
+                             now.date(), now.time()] + row)
+
 class Diary(object):
     def __init__(self, name, path='diary', overwrite=False, image_format='png'):
         self.creation_date = datetime.datetime.now()
@@ -27,10 +43,15 @@ class Diary(object):
         self.overwrite = overwrite
 
         self.image_format = image_format
-        self.iteration = 0
+        self.entry_number = 0
 
         self.all_paths = self._create_all_paths()
         self._save_description()
+
+        self.notebooks = {}
+
+    def add_notebook(self, name):
+        self.notebooks[name] = Notebook(name, self.path)
 
     def _create_all_paths(self):
         path = self.path
@@ -51,26 +72,16 @@ class Diary(object):
             print("Writting :\n{}".format(self))
             f.write(self.__str__())
 
-    def next_iteration(self):
-        self.iteration +=1
+    def add_entry(self, notebook_name, row):
+        self.entry_number += 1
+        self.notebooks[notebook_name].add_entry(row, self.entry_number)
 
-    def save_iteration_results(self, row, inc=False):
-        with open(os.path.join(self.path, RESULTS_FILENAME), 'a') as csvfile:
-            writer = csv.writer(csvfile, delimiter=',', quotechar='|',
-                    quoting=csv.QUOTE_NONNUMERIC)
-            now = datetime.datetime.now()
-            writer.writerow([self.iteration,  now.date(), now.time()] + row)
-        if inc:
-            self.iteration += 1
-
-    def save_image(self, image, filename='', extension=None, inc=False):
+    def save_image(self, image, filename='', extension=None):
         if extension == None:
             extension = self.image_format
         image.save(os.path.join(self.path_images,
-                                "{}_{}.{}".format(filename, self.iteration,
+                                "{}_{}.{}".format(filename, self.entry_number,
                                                   extension)))
-        if inc:
-            self.iteration += 1
 
     def __str__(self):
         return ("Date: {}\nName : {}\nPath : {}\n"
@@ -80,9 +91,11 @@ class Diary(object):
 
 if __name__ == "__main__":
     diary = Diary(name='world', path='hello', overwrite=False)
-    diary.save_iteration_results(['hi!', 0.3, 25, 'yes', 0, 'no'])
+    diary.add_notebook('validation')
+    diary.add_notebook('test')
+    diary.add_entry('validation', ['hi!', 0.3, 25, 'First entry', 0, 'yes'])
     image = Image.new(mode="1", size=(16,16), color=0)
-    diary.save_image(image, filename='test', inc=True)
-    diary.save_iteration_results(['bye', 0.5, 32, 'no', 0, 'yes'])
+    diary.save_image(image, filename='test')
+    diary.add_entry('test', ['bye', 0.5, 32, 'Second entry', 0, 'yes'])
     image = Image.new(mode="1", size=(16,16), color=1)
     diary.save_image(image, filename='test')
