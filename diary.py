@@ -4,7 +4,6 @@ run in python. It will create a folder for the specific experiment and
 save all the information and images in a structured and sorted manner.
 """
 __docformat__ = 'restructedtext en'
-
 import os
 import sys
 import datetime
@@ -37,13 +36,15 @@ class Diary(object):
 
     __DESCR_FILENAME='description.txt'
 
-    def __init__(self, name, path='diary', overwrite=False, image_format='png'):
+    def __init__(self, name, path='diary', overwrite=False, image_format='png',
+                 fig_format='svg'):
         self.creation_date = datetime.datetime.now()
         self.name = name
         self.path = os.path.join(path,name)
         self.overwrite = overwrite
 
         self.image_format = image_format
+        self.fig_format = fig_format
         self.entry_number = 0
 
         self.all_paths = self._create_all_paths()
@@ -62,7 +63,8 @@ class Diary(object):
             i +=1
 
         self.path_images = os.path.join(self.path, 'images')
-        all_paths = [self.path, self.path_images]
+        self.path_figures = os.path.join(self.path, 'figures')
+        all_paths = [self.path, self.path_images, self.path_figures]
         for path in all_paths:
             if not os.path.exists(path):
                 os.makedirs(path)
@@ -81,6 +83,15 @@ class Diary(object):
         if extension == None:
             extension = self.image_format
         image.save(os.path.join(self.path_images,
+                                "{}_{}.{}".format(filename, self.entry_number,
+                                                  extension)))
+
+    # TODO add support to matplotlib.pyplot.figure or add an additional
+    # function
+    def save_figure(self, plt, filename='', extension=None):
+        if extension == None:
+            extension = self.fig_format
+        plt.savefig(os.path.join(self.path_figures,
                                 "{}_{}.{}".format(filename, self.entry_number,
                                                   extension)))
 
