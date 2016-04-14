@@ -1,4 +1,6 @@
-"""
+#!/usr/bin/env python
+"""Diary to create notebooks and store intermediate results and figures
+
 This class can be used to save the intermediate results of any experiment
 run in python. It will create a folder for the specific experiment and
 save all the information and images in a structured and sorted manner.
@@ -6,15 +8,22 @@ save all the information and images in a structured and sorted manner.
 __docformat__ = 'restructedtext en'
 import os
 import sys
-import datetime
-
 import csv
+import datetime
 
 try:
     import PIL.Image as Image
 except ImportError:
     import Image
 
+__author__ = "Miquel Perello Nieto"
+__credits__ = ["Miquel Perello Nieto"]
+
+__license__ = "GPL"
+__version__ = "1.0"
+__maintainer__ = "Miquel Perello Nieto"
+__email__ = "miquel@perellonieto.com"
+__status__ = "Development"
 
 class Notebook(object):
     def __init__(self, name, path):
