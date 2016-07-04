@@ -84,8 +84,7 @@ class Diary(object):
             all_paths = [self.path, self.path_images, self.path_figures]
             try:
                 for actual_path in all_paths:
-                    if not os.path.exists(actual_path):
-                        os.makedirs(actual_path)
+                    os.makedirs(actual_path)
                 created = True
             except OSError as exception:
                 if exception.errno != errno.EEXIST:
