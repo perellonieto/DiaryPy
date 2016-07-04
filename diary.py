@@ -8,6 +8,7 @@ save all the information and images in a structured and sorted manner.
 __docformat__ = 'restructedtext en'
 import os
 import sys
+import errno
 import csv
 import datetime
 
@@ -26,11 +27,12 @@ __email__ = "miquel@perellonieto.com"
 __status__ = "Development"
 
 class Notebook(object):
-    def __init__(self, name, path):
+    def __init__(self, name, path, verbose=False):
         self.name = name
         self.filename = "{}.csv".format(name)
         self.path = path
         self.entry_number = 0
+        self.verbose = verbose
 
     def add_entry(self, row, general_entry_number=0):
         self.entry_number += 1
@@ -38,8 +40,12 @@ class Notebook(object):
             writer = csv.writer(csvfile, delimiter=',', quotechar='|',
                     quoting=csv.QUOTE_NONNUMERIC)
             now = datetime.datetime.now()
-            writer.writerow([general_entry_number, self.entry_number,
-                             now.date(), now.time()] + row)
+            row = [general_entry_number, self.entry_number,
+                    now.date().__str__(),
+                   now.time().__str__()] + row
+            writer.writerow(row)
+        if self.verbose:
+            print(row)
 
 class Diary(object):
 
@@ -61,22 +67,29 @@ class Diary(object):
 
         self.notebooks = {}
 
-    def add_notebook(self, name):
-        self.notebooks[name] = Notebook(name, self.path)
+    def add_notebook(self, name, **kwargs):
+        self.notebooks[name] = Notebook(name, self.path, **kwargs)
 
     def _create_all_paths(self):
-        path = self.path
+        original_path = self.path
+        created = False
         i = 0
-        while self.overwrite == False and os.path.exists(self.path):
-            self.path = "{}_{}".format(path,i)
-            i +=1
+        while not created:
+            while self.overwrite == False and os.path.exists(self.path):
+                self.path = "{}_{}".format(original_path,i)
+                i +=1
 
-        self.path_images = os.path.join(self.path, 'images')
-        self.path_figures = os.path.join(self.path, 'figures')
-        all_paths = [self.path, self.path_images, self.path_figures]
-        for path in all_paths:
-            if not os.path.exists(path):
-                os.makedirs(path)
+            self.path_images = os.path.join(self.path, 'images')
+            self.path_figures = os.path.join(self.path, 'figures')
+            all_paths = [self.path, self.path_images, self.path_figures]
+            try:
+                for actual_path in all_paths:
+                    if not os.path.exists(actual_path):
+                        os.makedirs(actual_path)
+                created = True
+            except OSError as exception:
+                if exception.errno != errno.EEXIST:
+                    raise
         return all_paths
 
     def _save_description(self):
