@@ -17,15 +17,6 @@ try:
 except ImportError:
     import Image
 
-__author__ = "Miquel Perello Nieto"
-__credits__ = ["Miquel Perello Nieto"]
-
-__license__ = "MIT"
-__version__ = "0.1"
-__maintainer__ = "Miquel Perello Nieto"
-__email__ = "perello.nieto@gmail.com"
-__status__ = "Development"
-
 class Notebook(object):
     def __init__(self, name, diary, verbose=False):
         self.name = name
