@@ -2,7 +2,15 @@ from distutils.core import setup
 setup(
   name = 'diarypy',
   packages = ['diarypy'],
-  version = '0.3',
+  install_requires=[
+    'os',
+    'sys',
+    'errno',
+    'csv',
+    'datetime',
+    'Image',
+  ],
+  version = '0.3.1',
   description = 'Diary to create notebooks and store intermediate results and figures',
   author = 'Miquel Perello Nieto',
   author_email = 'perello.nieto@gmail.com',
