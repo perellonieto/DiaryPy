@@ -12,8 +12,6 @@ import errno
 import csv
 import datetime
 
-from functools import partial
-
 try:
     import PIL.Image as Image
 except ImportError:
@@ -22,10 +20,10 @@ except ImportError:
 __author__ = "Miquel Perello Nieto"
 __credits__ = ["Miquel Perello Nieto"]
 
-__license__ = "GPL"
-__version__ = "1.0"
+__license__ = "MIT"
+__version__ = "0.1"
 __maintainer__ = "Miquel Perello Nieto"
-__email__ = "miquel@perellonieto.com"
+__email__ = "perello.nieto@gmail.com"
 __status__ = "Development"
 
 class Notebook(object):
