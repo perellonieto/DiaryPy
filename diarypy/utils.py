@@ -11,7 +11,6 @@ def open_all_diaries(name, path, mode='r'):
     diary_dict = {}
     for root, subdirs, files in os.walk(path, followlinks=True):
         if folder_regexp.match(root) and (DESCR_FILENAME in files):
-            print('Loading Diary ', root)
             try:
                 diary_dict[root] = load_diary(root, mode=mode)
             except ValueError as e:

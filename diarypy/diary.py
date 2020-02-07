@@ -28,7 +28,7 @@ def preprocess_row(row):
 def postprocess_row(row):
     for i, element in enumerate(row):
         if isinstance(element, str) and (element in ['True', 'False']):
-            row[i] = bool(element)
+            row[i] = element == 'True'
 
 
 class Notebook(object):
@@ -86,7 +86,7 @@ class Diary(object):
 
     def __init__(self, name, path='diary', overwrite=False, image_format='png',
                  fig_format='svg', stdout=True, stderr=True, fig_entry=False,
-                 mode='w'):
+                 mode='w', verbose=False):
         '''
         Parameters
         ==========
@@ -103,6 +103,7 @@ class Diary(object):
         self.version = 0
         self.overwrite = overwrite
         self.mode = mode
+        self.verbose = verbose
 
         self.image_format = image_format
         self.fig_format = fig_format
@@ -176,7 +177,8 @@ class Diary(object):
 
     def _save_description(self):
         with open(os.path.join(self.path, DESCR_FILENAME), 'w') as fp:
-            print("Saving :\n{}".format(self))
+            if self.verbose:
+                print("Saving :\n{}".format(self))
             json.dump(self.__dict__, fp, indent=1, default=str)
 
     def add_entry(self, notebook_name, row):
