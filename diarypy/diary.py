@@ -12,6 +12,7 @@ import errno
 import csv
 import json
 import datetime
+import logging
 
 from diarypy import DESCR_FILENAME
 from diarypy import DIARY_VERSION_DELIMITER
@@ -149,6 +150,8 @@ class Diary(object):
 
     def redirect_stdout(self, path, filename='stdout.txt'):
         sys.stdout = open(os.path.join(path, filename), 'w')
+        logging.StreamHandler(sys.stdout)
+        print('Configuring stdout for logging')
 
     def redirect_stderr(self, path, filename='stderr.txt'):
         sys.stderr = open(os.path.join(path, filename), 'w')
