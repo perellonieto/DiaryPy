@@ -64,3 +64,9 @@ test.csv
 ```
 4,1,|2015-10-22|,|17:43:19.765657|,|First test went wrong|,0.345,|label_1|
 ```
+
+# Unittest
+
+```
+python -m unittest discover diarypy
+```
