@@ -8,6 +8,7 @@ save all the information and images in a structured and sorted manner.
 __docformat__ = 'restructedtext en'
 import os
 import sys
+import shutil
 import errno
 import csv
 import json
@@ -66,6 +67,7 @@ class Notebook(object):
             row = [general_entry_number, self.entry_number,
                     now.date().__str__(),
                    now.time().__str__()] + row
+            self.history.append(row)
             writer.writerow(row)
         if self.verbose:
             print(row)
@@ -95,7 +97,7 @@ class Diary(object):
             If True the name of the figure contains the entry number
         '''
         if name is None:
-            self.__load_diary(path, mode=mode)
+            self.__load_diary(path)
             return
 
         self.creation_date = datetime.datetime.now()
@@ -113,17 +115,17 @@ class Diary(object):
         self.all_paths = self._create_all_paths(overwrite)
         self._save_description()
 
-        self.stdout = stdout
-        self.stderr = stderr
+        self.red_stdout = stdout
+        self.red_stderr = stderr
 
-        if self.stdout:
+        if stdout:
             self.redirect_stdout(self.path)
-        if self.stderr:
+        if stderr:
             self.redirect_stderr(self.path)
 
         self.notebooks = {}
 
-    def __load_diary(self, path, mode='r'):
+    def __load_diary(self, path):
         with open(os.path.join(path, DESCR_FILENAME), 'r') as fp:
             all_attributes = json.load(fp)
             for attribute, value in all_attributes.items():
@@ -149,11 +151,12 @@ class Diary(object):
             return dict(vars(self), path=self.path)
 
     def redirect_stdout(self, path, filename='stdout.txt'):
+        self.original_stdout = sys.stdout
         sys.stdout = open(os.path.join(path, filename), 'w')
         logging.StreamHandler(sys.stdout)
-        print('Configuring stdout for logging')
 
     def redirect_stderr(self, path, filename='stderr.txt'):
+        self.original_stderr = sys.stderr
         sys.stderr = open(os.path.join(path, filename), 'w')
 
     def add_notebook(self, name, **kwargs):
@@ -163,8 +166,10 @@ class Diary(object):
     def _create_all_paths(self, overwrite):
         original_path = self.path
         created = False
+        if overwrite and os.path.exists(self.path):
+            shutil.rmtree(self.path)
         while not created:
-            while overwrite == False and os.path.exists(self.path):
+            while os.path.exists(self.path):
                 self.version +=1
 
             self.path_images = os.path.join(self.path, 'images')
@@ -240,6 +245,15 @@ class Diary(object):
     def set_shared_vars(self, s_vars):
         for key, value in s_vars.items():
             self.__dict__[key] = value
+
+    def __del__(self):
+        if hasattr(self, 'red_stdout') and self.red_stdout:
+            sys.stdout.close()
+            sys.stdout = self.original_stdout
+        if hasattr(self, 'red_stderr') and self.red_stderr:
+            sys.stderr.close()
+            sys.stderr = self.original_stderr
+
 
 class SharedDiary(Diary):
     def __init__(self, s_vars, unique_id):
