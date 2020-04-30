@@ -2,3 +2,4 @@
 *__pycache__
 unittest_folder
 venv
+*.pyc
