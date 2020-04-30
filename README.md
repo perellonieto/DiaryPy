@@ -1,5 +1,7 @@
 # DiaryPy
 
+[![Build Status](https://travis-ci.org/perellonieto/DiaryPy.svg?branch=master)](https://travis-ci.org/perellonieto/DiaryPy)
+
 - Create a new diary
 
 ```
