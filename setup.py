@@ -5,7 +5,7 @@ with open("README.md", 'r') as f:
     long_description = f.read()
 
 main_ns = {}
-ver_path = convert_path('diarypy/__init__.py')
+ver_path = convert_path('diarypy/version.py')
 with open(ver_path) as ver_file:
     exec(ver_file.read(), main_ns)
 
