@@ -16,6 +16,7 @@ setuptools.setup(
     author_email='perello.nieto@gmail.com',
     description='Diary to create notebooks and store intermediate results and figures',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     url='https://github.com/perellonieto/DiaryPy',
     packages=setuptools.find_packages(),
     download_url='https://github.com/perellonieto/DiaryPy/archive/{}.tar.gz'.format(main_ns['__version__']),
