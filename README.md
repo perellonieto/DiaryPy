@@ -1,5 +1,8 @@
 # DiaryPy
 
+### A python class to automatically save the partial/intermediary results of a running experiment in a set of notebooks (csv files) and images as files.
+
+
 [![Build Status](https://travis-ci.org/perellonieto/DiaryPy.svg?branch=master)](https://travis-ci.org/perellonieto/DiaryPy)
 
 Create a new diary
