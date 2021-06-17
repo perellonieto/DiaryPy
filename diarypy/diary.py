@@ -1,5 +1,6 @@
 #!/usr/bin/env python
-"""Diary to create notebooks and store intermediate results and figures
+"""
+Diary to create notebooks and store intermediate results and figures
 
 This class can be used to save the intermediate results of any experiment
 run in python. It will create a folder for the specific experiment and
@@ -21,7 +22,8 @@ from diarypy import DIARY_VERSION_DELIMITER
 
 def preprocess_row(row):
     if type(row) is dict:
-        row = sum([[key, str(value).replace('\n', '\\n')] for key, value in row.items()], [])
+        row = sum([[key, str(value).replace('\n', '\\n')]
+                   for key, value in row.items()], [])
     for i, element in enumerate(row):
         if isinstance(element, bool):
             row[i] = 'True' if element else 'False'
@@ -54,7 +56,7 @@ class Notebook(object):
 
     def add_entry(self, row):
         if self.mode == 'r':
-            print('Error: Entry not added. This notebook is in read mode only.')
+            print('Error: Entry not added. This Notebook is in read mode only.')
             return
 
         general_entry_number = self.diary.increase_entry_number()
@@ -65,8 +67,7 @@ class Notebook(object):
                                 quoting=csv.QUOTE_NONNUMERIC)
             now = datetime.datetime.now()
             row = [general_entry_number, self.entry_number,
-                    now.date().__str__(),
-                   now.time().__str__()] + row
+                   now.date().__str__(), now.time().__str__()] + row
             self.history.append(row)
             writer.writerow(row)
         if self.verbose:
@@ -148,7 +149,7 @@ class Diary(object):
 
     @property
     def all_attributes(self):
-            return dict(vars(self), path=self.path)
+        return dict(vars(self), path=self.path)
 
     def redirect_stdout(self, path, filename='stdout.txt'):
         self.original_stdout = sys.stdout
@@ -164,17 +165,16 @@ class Diary(object):
         return self.notebooks[name]
 
     def _create_all_paths(self, overwrite):
-        original_path = self.path
         created = False
         if overwrite and os.path.exists(self.path):
             shutil.rmtree(self.path)
         while not created:
             while os.path.exists(self.path):
-                self.version +=1
+                self.version += 1
 
             self.path_images = os.path.join(self.path, 'images')
             self.path_figures = os.path.join(self.path, 'figures')
-            all_paths = [self.path,]
+            all_paths = [self.path, ]
             try:
                 os.makedirs(self.path)
                 created = True
@@ -204,7 +204,7 @@ class Diary(object):
                 if exception.errno != errno.EEXIST:
                     raise
             self.all_paths.append(self.path_images)
-        if extension == None:
+        if extension is None:
             extension = self.image_format
         image.save(os.path.join(self.path_images,
                                 "{}_{}.{}".format(filename, self.entry_number,
@@ -220,14 +220,15 @@ class Diary(object):
                 if exception.errno != errno.EEXIST:
                     raise
             self.all_paths.append(self.path_figures)
-        if extension == None:
+        if extension is None:
             extension = self.fig_format
         fig.tight_layout()
         if filename is None:
             filename = fig.get_label()
 
         if self.fig_entry:
-            filename = "{}_{}.{}".format(filename, self.entry_number, extension)
+            filename = "{}_{}.{}".format(filename, self.entry_number,
+                                         extension)
         else:
             filename = "{}.{}".format(filename, extension)
 
@@ -287,5 +288,5 @@ if __name__ == "__main__":
     except ImportError:
         import Image
 
-    image = Image.new(mode="1", size=(16,16), color=0)
+    image = Image.new(mode="1", size=(16, 16), color=0)
     diary.save_image(image, filename='test_results')
