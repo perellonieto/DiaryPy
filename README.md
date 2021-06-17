@@ -1,5 +1,4 @@
 [![CI][ci:b]][ci]
-[![Documentation][documentation:b]][documentation]
 [![License MIT][license:b]][license]
 ![Python3.8][python:b]
 [![pypi][pypi:b]][pypi]
@@ -55,6 +54,7 @@ notebook_test.add_entry(['First test went wrong', 0.345, 'label_1'])
 Add an image
 
 ```
+from PIL import Image
 image = Image.new(mode="1", size=(16,16), color=0)
 diary.save_image(image, filename='test_results')
 ```
