@@ -25,14 +25,19 @@
 Create a new diary
 
 ```
-diary = Diary(name='world', path='hello', overwrite=False)
+from diarypy.diary import Diary
+diary = Diary(name='world', path='hello', overwrite=False,
+              stdout=False, stderr=False)
 ```
 
 Create all the notebooks that you want to use
 
 ```
 diary.add_notebook('validation')
-diary.add_notebook('test')
+# You can use the returned instance later
+notebook_test = diary.add_notebook('test')
+# And specify the header
+notebook_train = diary.add_notebook('training', header=['iteration', 'accuracy'])
 ```
 
 Store your results in the different notebooks
@@ -41,10 +46,13 @@ Store your results in the different notebooks
 diary.add_entry('validation', ['accuracy', 0.3])
 diary.add_entry('validation', ['accuracy', 0.5])
 diary.add_entry('validation', ['accuracy', 0.9])
-diary.add_entry('test', ['First test went wrong', 0.345, 'label_1'])
+notebook_train.add_entry([0, 0.4])
+notebook_train.add_entry([1, 0.6])
+notebook_train.add_entry([2, 0.8])
+notebook_test.add_entry(['First test went wrong', 0.345, 'label_1'])
 ```
 
-Add some image
+Add an image
 
 ```
 image = Image.new(mode="1", size=(16,16), color=0)
@@ -62,6 +70,7 @@ hello/
     ├── images
     │   └── test_results_4.png
     ├── test.csv
+    └── training.csv
     └── validation.csv
 ```
 the content of the files is
@@ -77,14 +86,22 @@ Image_format : png
 
 validation.csv
 ```
-1,1,|2015-10-22|,|17:43:19.765404|,|accuracy|,0.3
-2,2,|2015-10-22|,|17:43:19.765509|,|accuracy|,0.5
-3,3,|2015-10-22|,|17:43:19.765576|,|accuracy|,0.9
+1,1,|2021-06-17|,|12:56:45.945000|,|accuracy|,0.3
+2,2,|2021-06-17|,|12:56:46.813717|,|accuracy|,0.5
+3,3,|2021-06-17|,|12:56:53.358989|,|accuracy|,0.9
+```
+
+training.csv
+```
+|id1|,|id2|,|date|,|time|,|iteration|,|accuracy|
+4,1,|2021-06-17|,|12:56:54.231691|,0,0.4
+5,2,|2021-06-17|,|12:56:55.128130|,1,0.6
+6,3,|2021-06-17|,|12:56:56.006014|,2,0.8
 ```
 
 test.csv
 ```
-4,1,|2015-10-22|,|17:43:19.765657|,|First test went wrong|,0.345,|label_1|
+7,1,|2021-06-17|,|12:56:56.761961|,|First test went wrong|,0.345,|label_1|
 ```
 
 # Unittest
