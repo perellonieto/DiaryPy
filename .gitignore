@@ -3,3 +3,7 @@
 unittest_folder
 venv
 *.pyc
+
+# Coverate test partial results
+.coverage
+coverage.xml

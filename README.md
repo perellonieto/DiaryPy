@@ -1,7 +1,24 @@
+[![CI][ci:b]][ci]
+[![Documentation][documentation:b]][documentation]
+[![License MIT][license:b]][license]
+![Python3.8][python:b]
+[![pypi][pypi:b]][pypi]
+[![codecov][codecov:b]][codecov]
+
+[ci]: https://github.com/perellonieto/DiaryPy/actions/workflows/ci.yml
+[ci:b]: https://github.com/perellonieto/diarypy/workflows/CI/badge.svg
+[license]: https://github.com/perellonieto/DiaryPy/blob/master/LICENSE.txt
+[license:b]: https://img.shields.io/github/license/perellonieto/diarypy.svg
+[python:b]: https://img.shields.io/badge/python-3.8-blue
+[pypi]: https://badge.fury.io/py/diarypy
+[pypi:b]: https://badge.fury.io/py/diarypy.svg
+[codecov]: https://codecov.io/gh/perellonieto/DiaryPy
+[codecov:b]: https://codecov.io/gh/perellonieto/DiaryPy/branch/master/graph/badge.svg?token=AYMZPLELT3
+
+
 # DiaryPy
 
 ### A python class to automatically save the partial/intermediary results of a running experiment in a set of notebooks (csv files) and images as files.
-
 
 [![Build Status](https://travis-ci.org/perellonieto/DiaryPy.svg?branch=master)](https://travis-ci.org/perellonieto/DiaryPy)
 
