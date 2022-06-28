@@ -22,11 +22,15 @@ from diarypy import DIARY_VERSION_DELIMITER
 
 def preprocess_row(row):
     if type(row) is dict:
-        row = sum([[key, str(value).replace('\n', '\\n')]
+        new_row = sum([[key, str(value).replace('\n', '\\n')]
                    for key, value in row.items()], [])
+    else:
+        new_row = row
     for i, element in enumerate(row):
         if isinstance(element, bool):
-            row[i] = 'True' if element else 'False'
+            new_row[i] = 'True' if element else 'False'
+
+    return new_row
 
 
 def postprocess_row(row):
@@ -61,7 +65,7 @@ class Notebook(object):
 
         general_entry_number = self.diary.increase_entry_number()
         self.entry_number += 1
-        preprocess_row(row)
+        row = preprocess_row(row)
         with open(os.path.join(self.diary.path, self.filename), 'a') as csvfile:
             writer = csv.writer(csvfile, delimiter=',', quotechar='|',
                                 quoting=csv.QUOTE_NONNUMERIC)
