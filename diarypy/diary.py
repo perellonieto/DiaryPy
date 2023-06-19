@@ -20,6 +20,9 @@ from diarypy import DESCR_FILENAME
 from diarypy import DIARY_VERSION_DELIMITER
 
 
+FIRST_COLUMNS = ['id1', 'id2', 'date', 'time']
+
+
 def preprocess_row(row):
     if type(row) is dict:
         new_row = sum([[key, str(value).replace('\n', '\\n')]
@@ -48,11 +51,12 @@ class Notebook(object):
         self.verbose = verbose
         self.history = []
         self.mode = mode
+        self.has_header = header is not None
         if header is not None:
             with open(os.path.join(self.diary.path, self.filename), 'a') as csvfile:
                 writer = csv.writer(csvfile, delimiter=',', quotechar='|',
                                     quoting=csv.QUOTE_NONNUMERIC)
-                row = ['id1', 'id2', 'date', 'time'] + header
+                row = FIRST_COLUMNS + header
                 writer.writerow(row)
 
         if mode == 'r':
@@ -84,6 +88,13 @@ class Notebook(object):
             for row in reader:
                 postprocess_row(row)
                 self.history.append(row)
+        self.has_header = True
+        for i, col_name in enumerate(FIRST_COLUMNS):
+            if self.history[0][i] != col_name:
+                self.has_header = False
+                break
+        if self.has_header:
+            self.header = self.history[0]
 
     @property
     def path(self):
